@@ -20,6 +20,7 @@ Cursor, Codex, Claude Code가 공통으로 참조하는 프로젝트 지침입�
 - `_posts/`: 블로그 글 (`YYYY-MM-DD-title.md`)
 - `_tabs/`: 사이드바 탭 (about, archives, categories, tags)
 - `_data/`: 연락처, 공유 설정 등 데이터
+  - `_data/portfolio.yml`: About 탭(포트폴리오) 내용. 레이아웃은 `_layouts/portfolio.html`, 스타일은 `_sass/custom/_portfolio.scss`
 - `_plugins/`: Jekyll 플러그인
 - `assets/`: 이미지 등 정적 리소스
 - `tools/`: 로컬 실행/테스트 스크립트
@@ -30,6 +31,9 @@ Cursor, Codex, Claude Code가 공통으로 참조하는 프로젝트 지침입�
 bundle install          # 의존성 설치
 bash tools/run.sh       # 로컬 서버 (http://127.0.0.1:4000)
 bash tools/test.sh      # 프로덕션 빌드 + html-proofer 검사
+
+# 로컬 Ruby 없이 Docker로 실행
+docker compose up --build   # http://localhost:4000
 ```
 
 ## 글 작성 규칙

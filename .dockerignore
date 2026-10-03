@@ -1,0 +1,9 @@
+.git
+.idea
+.jekyll-cache
+.jekyll-metadata
+_site
+vendor
+.bundle
+Gemfile.lock
+node_modules

@@ -1,0 +1,23 @@
+{%- comment -%}
+  Problem → Analyze → Action → Result 블록
+  Usage: {% include portfolio-paar.html item=obj %}
+{%- endcomment -%}
+{% assign paar = include.item %}
+<dl class="pf-paar">
+  {% if paar.problem and paar.problem != '' %}
+    <dt>Problem</dt>
+    <dd>{{ paar.problem | markdownify }}</dd>
+  {% endif %}
+  {% if paar.analyze and paar.analyze != '' %}
+    <dt>Analyze</dt>
+    <dd>{{ paar.analyze | markdownify }}</dd>
+  {% endif %}
+  {% if paar.action and paar.action != '' %}
+    <dt>Action</dt>
+    <dd>{{ paar.action | markdownify }}</dd>
+  {% endif %}
+  {% if paar.result and paar.result != '' %}
+    <dt>Result</dt>
+    <dd class="pf-paar-result">{{ paar.result | markdownify }}</dd>
+  {% endif %}
+</dl>

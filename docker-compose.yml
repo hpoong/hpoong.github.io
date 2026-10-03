@@ -1,0 +1,12 @@
+services:
+  jekyll:
+    build: .
+    image: hpoong-blog
+    container_name: hpoong-blog
+    ports:
+      - "4000:4000" # 사이트
+      - "35729:35729" # livereload
+    volumes:
+      - .:/srv/jekyll
+    environment:
+      JEKYLL_ENV: development

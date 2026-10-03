@@ -1,0 +1,25 @@
+{%- comment -%}
+  url이 비어 있는 링크는 건너뜁니다.
+  Usage: {% include portfolio-links.html links=array %}
+{%- endcomment -%}
+{% assign valid_links = include.links | where_exp: 'link', "link.url != ''" | where_exp: 'link', 'link.url' %}
+{% if valid_links.size > 0 %}
+  <div class="pf-links">
+    {% for link in valid_links %}
+      {% assign is_external = false %}
+      {% if link.url contains '://' %}
+        {% assign is_external = true %}
+      {% endif %}
+      <a
+        class="pf-link"
+        href="{{ link.url | relative_url }}"
+        {% if is_external %}
+          target="_blank" rel="noopener noreferrer"
+        {% endif %}
+      >
+        {% if link.icon %}<i class="{{ link.icon }} fa-fw"></i>{% endif %}
+        <span>{{ link.label }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}

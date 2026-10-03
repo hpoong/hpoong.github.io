@@ -1,0 +1,251 @@
+---
+layout: page
+---
+
+{% assign pf = site.data.portfolio %}
+
+<div class="portfolio">
+  <header class="pf-hero">
+    {% if pf.profile.role %}<p class="pf-role">{{ pf.profile.role }}</p>{% endif %}
+    {% if pf.profile.name %}<p class="pf-name">{{ pf.profile.name }}</p>{% endif %}
+
+    {% if pf.profile.summary and pf.profile.summary.size > 0 %}
+      <ul class="pf-summary">
+        {% for line in pf.profile.summary %}
+          <li>{{ line | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if pf.profile.resume and pf.profile.resume != '' %}
+      <div class="pf-links pf-resume">
+        <a class="pf-link pf-link-primary" href="{{ pf.profile.resume | relative_url }}" download>
+          <i class="fas fa-file-arrow-down fa-fw"></i><span>Resume</span>
+        </a>
+      </div>
+    {% endif %}
+    {% include portfolio-links.html links=pf.profile.links %}
+  </header>
+
+  {% capture nav_items %}
+    {% if pf.skills.size > 0 %}<a href="#skills">Skills</a>{% endif %}
+    {% if pf.experience.size > 0 %}<a href="#experience">Experience</a>{% endif %}
+    {% if pf.projects.size > 0 %}<a href="#projects">Projects</a>{% endif %}
+    {% if pf.activities.size > 0 %}<a href="#activities">Activities</a>{% endif %}
+    {% if pf.writing.size > 0 %}<a href="#writing">Writing</a>{% endif %}
+    {% if pf.education.size > 0 or pf.certifications.size > 0 %}<a href="#education">Education</a>{% endif %}
+  {% endcapture %}
+  {% assign nav_items = nav_items | strip %}
+  {% if nav_items != '' %}
+    <nav class="pf-nav" aria-label="Portfolio sections">{{ nav_items }}</nav>
+  {% endif %}
+
+  {% if pf.metrics.size > 0 %}
+    <section class="pf-section pf-metrics" aria-label="Key metrics">
+      {% for metric in pf.metrics %}
+        <div class="pf-metric">
+          <span class="pf-metric-value">{{ metric.value }}</span>
+          <span class="pf-metric-label">{{ metric.label }}</span>
+        </div>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if pf.skills.size > 0 %}
+    <section class="pf-section" id="skills">
+      <h2 class="pf-section-title">Skills</h2>
+      <div class="pf-skills">
+        {% for group in pf.skills %}
+          <div class="pf-card pf-skill">
+            <h3 class="pf-card-title">{{ group.category }}</h3>
+            {% include portfolio-badges.html items=group.items %}
+            {% if group.note and group.note != '' %}
+              <div class="pf-muted">{{ group.note | markdownify }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if pf.experience.size > 0 %}
+    <section class="pf-section" id="experience">
+      <h2 class="pf-section-title">Experience</h2>
+      <ol class="pf-timeline">
+        {% for job in pf.experience %}
+          <li class="pf-timeline-item">
+            <div class="pf-item-head">
+              <div>
+                <h3 class="pf-item-title">{{ job.company }}</h3>
+                <p class="pf-item-sub">
+                  {{ job.team }}{% if job.team and job.role %} · {% endif %}{{ job.role }}
+                </p>
+              </div>
+              <span class="pf-period">{{ job.period }}</span>
+            </div>
+
+            {% if job.summary and job.summary != '' %}
+              <div class="pf-muted">{{ job.summary | markdownify }}</div>
+            {% endif %}
+            {% include portfolio-badges.html items=job.stack %}
+
+            {% for work in job.projects %}
+              <details class="pf-card pf-work" {% if forloop.first %}open{% endif %}>
+                <summary>
+                  <span class="pf-work-title">{{ work.title }}</span>
+                  <span class="pf-period">{{ work.period }}</span>
+                </summary>
+                {% include portfolio-badges.html items=work.stack %}
+                {% include portfolio-paar.html item=work %}
+              </details>
+            {% endfor %}
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+  {% endif %}
+
+  {% if pf.projects.size > 0 %}
+    <section class="pf-section" id="projects">
+      <h2 class="pf-section-title">Projects</h2>
+      {% for project in pf.projects %}
+        <article class="pf-card pf-project">
+          <div class="pf-item-head">
+            <div>
+              <h3 class="pf-item-title">{{ project.name }}</h3>
+              {% if project.team %}<p class="pf-item-sub">{{ project.team }}</p>{% endif %}
+            </div>
+            <span class="pf-period">{{ project.period }}</span>
+          </div>
+
+          {% if project.summary and project.summary != '' %}
+            <div class="pf-muted">{{ project.summary | markdownify }}</div>
+          {% endif %}
+          {% include portfolio-badges.html items=project.stack %}
+
+          {% if project.architecture and project.architecture != '' %}
+            <figure class="pf-architecture">
+              <img src="{{ project.architecture | relative_url }}" alt="{{ project.name }} architecture" loading="lazy">
+              <figcaption>Architecture</figcaption>
+            </figure>
+          {% endif %}
+
+          <div class="pf-project-grid">
+            {% if project.decisions.size > 0 %}
+              <div>
+                <h4 class="pf-sub-title">Why this stack</h4>
+                <ul class="pf-list">
+                  {% for item in project.decisions %}
+                    <li>{{ item | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+            {% if project.contributions.size > 0 %}
+              <div>
+                <h4 class="pf-sub-title">Key contributions</h4>
+                <ul class="pf-list">
+                  {% for item in project.contributions %}
+                    <li>{{ item | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if project.troubleshooting.size > 0 %}
+            <h4 class="pf-sub-title">Troubleshooting</h4>
+            {% for issue in project.troubleshooting %}
+              <details class="pf-work" {% if forloop.first %}open{% endif %}>
+                <summary><span class="pf-work-title">{{ issue.title }}</span></summary>
+                {% include portfolio-paar.html item=issue %}
+              </details>
+            {% endfor %}
+          {% endif %}
+
+          {% include portfolio-links.html links=project.links %}
+        </article>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if pf.activities.size > 0 %}
+    <section class="pf-section" id="activities">
+      <h2 class="pf-section-title">Activities</h2>
+      <ul class="pf-rows">
+        {% for act in pf.activities %}
+          <li class="pf-row">
+            <span class="pf-row-tag">{{ act.type }}</span>
+            <div class="pf-row-body">
+              {% if act.url and act.url != '' %}
+                <a href="{{ act.url }}" target="_blank" rel="noopener noreferrer">{{ act.title }}</a>
+              {% else %}
+                <span class="pf-row-title">{{ act.title }}</span>
+              {% endif %}
+              {% if act.description and act.description != '' %}
+                <div class="pf-muted">{{ act.description | markdownify }}</div>
+              {% endif %}
+            </div>
+            <span class="pf-period">{{ act.period }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+  {% if pf.writing.size > 0 %}
+    <section class="pf-section" id="writing">
+      <h2 class="pf-section-title">Writing</h2>
+      <ul class="pf-rows">
+        {% for post in pf.writing %}
+          <li class="pf-row">
+            <div class="pf-row-body">
+              {% if post.url and post.url != '' %}
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              {% else %}
+                <span class="pf-row-title">{{ post.title }}</span>
+              {% endif %}
+            </div>
+            <span class="pf-period">{{ post.date }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+  {% if pf.education.size > 0 or pf.certifications.size > 0 %}
+    <section class="pf-section" id="education">
+      <h2 class="pf-section-title">Education &amp; Certifications</h2>
+      <div class="pf-project-grid">
+        {% if pf.education.size > 0 %}
+          <ul class="pf-rows">
+            {% for edu in pf.education %}
+              <li class="pf-row">
+                <div class="pf-row-body">
+                  <span class="pf-row-title">{{ edu.school }}</span>
+                  <div class="pf-muted">{{ edu.major }}</div>
+                </div>
+                <span class="pf-period">{{ edu.period }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if pf.certifications.size > 0 %}
+          <ul class="pf-rows">
+            {% for cert in pf.certifications %}
+              <li class="pf-row">
+                <div class="pf-row-body">
+                  <span class="pf-row-title">{{ cert.name }}</span>
+                  <div class="pf-muted">{{ cert.issuer }}</div>
+                </div>
+                <span class="pf-period">{{ cert.date }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {{ content }}
+</div>

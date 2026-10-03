@@ -1,0 +1,10 @@
+{%- comment -%}
+  Usage: {% include portfolio-badges.html items=array %}
+{%- endcomment -%}
+{% if include.items and include.items.size > 0 %}
+  <ul class="pf-badges">
+    {% for item in include.items %}
+      <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}

@@ -224,6 +224,8 @@ exclude:
   - README.md
   - AGENTS.md
   - CLAUDE.md
+  - Dockerfile
+  - docker-compose.yml
   - LICENSE
   - purgecss.js
   - "*.config.js"

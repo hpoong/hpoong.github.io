@@ -1,0 +1,105 @@
+# About(포트폴리오) 페이지 데이터. 레이아웃: _layouts/portfolio.html
+# - 대괄호([...]) 값은 자리표시자입니다. 실제 내용으로 교체하세요.
+# - url / image 값이 비어 있으면 해당 링크·이미지는 렌더링되지 않습니다.
+# - 서술형 필드는 Markdown을 지원합니다.
+# - 쓰지 않는 섹션은 목록을 비우거나([]) 키를 삭제하면 숨겨집니다.
+
+profile:
+  name: "[이름]"
+  role: "[Backend Engineer]"
+  # 상단 3줄 요약: 연차·직무 / 주력 스택 / 대표 정량 성과
+  summary:
+    - "[N년차 백엔드 개발자, 담당 도메인]"
+    - "[주력 스택]"
+    - "[가장 자신 있는 정량 성과]"
+  resume: "" # 예: /assets/files/resume.pdf
+  links:
+    - { label: Email, icon: fas fa-envelope, url: "" } # mailto:...
+    - { label: GitHub, icon: fab fa-github, url: "" }
+    - { label: Blog, icon: fas fa-pen-nib, url: "" }
+    - { label: LinkedIn, icon: fab fa-linkedin, url: "" }
+
+# 핵심 성과 지표 (3~4개 권장)
+metrics:
+  - { value: "[수치]", label: "[지표 설명]" }
+  - { value: "[수치]", label: "[지표 설명]" }
+  - { value: "[수치]", label: "[지표 설명]" }
+
+# 기술 스택: 나열보다 "어디까지 다뤄봤는지"를 note에 문장으로
+skills:
+  - category: Language
+    items: ["[기술]"]
+    note: "[숙련도/활용 범위]"
+  - category: Framework
+    items: ["[기술]"]
+    note: "[숙련도/활용 범위]"
+  - category: Database
+    items: ["[기술]"]
+    note: "[숙련도/활용 범위]"
+  - category: Infra & DevOps
+    items: ["[기술]"]
+    note: "[숙련도/활용 범위]"
+  - category: Messaging & Cache
+    items: ["[기술]"]
+    note: "[숙련도/활용 범위]"
+  - category: Monitoring
+    items: ["[기술]"]
+    note: "[숙련도/활용 범위]"
+
+# 경력: 회사별 → 프로젝트별 PAAR(문제 → 검토 → 실행 → 결과)
+experience:
+  - company: "[회사명]"
+    team: "[팀명]"
+    role: "[직무/직급]"
+    period: "[YYYY.MM - 현재]"
+    summary: "[회사/서비스 한 줄 소개 및 담당 역할]"
+    stack: ["[기술]"]
+    projects:
+      - title: "[프로젝트/과제명]"
+        period: "[YYYY.MM - YYYY.MM]"
+        stack: ["[기술]"]
+        problem: "[왜 이 문제가 중요했는가]"
+        analyze: "[검토한 대안과 선택 이유]"
+        action: "[실제로 실행한 것]"
+        result: "[수치로 표현한 결과]"
+
+# 프로젝트: 아키텍처, 기술 선택 이유, 트러블슈팅 중심
+projects:
+  - name: "[프로젝트명]"
+    period: "[YYYY.MM - YYYY.MM]"
+    team: "[인원 구성 / 본인 역할]"
+    summary: "[프로젝트 한 줄 소개]"
+    stack: ["[기술]"]
+    architecture: "" # 예: /assets/img/portfolio/project-architecture.png
+    decisions: # 기술 선택 이유
+      - "[기술 선택과 그 이유]"
+    contributions: # 핵심 기여
+      - "[담당 기능/기여 내용]"
+    troubleshooting:
+      - title: "[트러블슈팅 제목]"
+        problem: "[문제 상황]"
+        analyze: "[원인 분석 및 대안 검토]"
+        action: "[해결 방법]"
+        result: "[개선 결과]"
+    links:
+      - { label: GitHub, icon: fab fa-github, url: "" }
+      - { label: Demo, icon: fas fa-arrow-up-right-from-square, url: "" }
+      - { label: 회고, icon: fas fa-pen-nib, url: "" }
+
+# 오픈소스 기여, 발표, 스터디, 멘토링 등
+activities:
+  - type: "[Open Source]"
+    title: "[활동명]"
+    period: "[YYYY.MM]"
+    description: "[내용]"
+    url: ""
+
+# 대표 기술 글
+writing:
+  - { title: "[글 제목]", date: "[YYYY.MM.DD]", url: "" }
+
+education:
+  - { school: "[학교/교육기관]", major: "[전공/과정]", period: "[YYYY.MM - YYYY.MM]" }
+
+certifications:
+  - { name: "[자격증/수상명]", issuer: "[발급기관]", date: "[YYYY.MM]" }

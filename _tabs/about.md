@@ -1,8 +1,6 @@
 ---
-# the default layout is 'page'
+# 내용은 _data/portfolio.yml 에서 관리합니다.
+layout: portfolio
 icon: fas fa-info-circle
 order: 4
 ---
-
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
