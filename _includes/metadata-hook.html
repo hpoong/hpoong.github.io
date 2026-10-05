@@ -1,2 +1,29 @@
 <!-- 검색 엔진 색인·스니펫·캐시 차단 (robots.txt에서 일반 크롤러를 막으면 이 태그를 읽지 못하므로 함께 사용) -->
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+
+{% if jekyll.environment == 'production' %}
+<!--
+  GitHub Pages는 Cache-Control: max-age=600 을 고정으로 내려주고 테마 CSS/JS URL에 버전이 없어,
+  배포 직후에도 브라우저가 옛 파일을 쓴다. 빌드 번호를 no-store로 확인해 다르면 캐시를 갱신 후 1회 새로고침한다.
+-->
+<script>
+  (function () {
+    var build = '{{ site.time | date: "%s" }}';
+    var key = 'reloaded-build';
+    fetch('{{ "/assets/build.json" | relative_url }}', { cache: 'no-store' })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (!data.build || data.build === build || sessionStorage.getItem(key) === data.build) return;
+        sessionStorage.setItem(key, data.build);
+        var urls = [
+          location.href,
+          '{{ "/assets/css/:THEME.css" | replace: ":THEME", site.theme | relative_url }}',
+          '{{ "/assets/js/dist/theme.min.js" | relative_url }}'
+        ];
+        return Promise.all(urls.map(function (url) { return fetch(url, { cache: 'reload' }); }))
+          .then(function () { location.reload(); });
+      })
+      .catch(function () {});
+  })();
+</script>
+{% endif %}
