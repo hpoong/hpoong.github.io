@@ -150,7 +150,7 @@ assets:
 pwa:
   enabled: true # The option for PWA feature (installable)
   cache:
-    enabled: true # The option for PWA offline cache
+    enabled: false # 배포 후 항상 최신 콘텐츠를 받도록 오프라인 캐시 비활성화 (기존 방문자 캐시는 자동 삭제)
     # Paths defined here will be excluded from the PWA cache.
     # Usually its value is the `baseurl` of another website that
     # shares the same domain name as the current website.
