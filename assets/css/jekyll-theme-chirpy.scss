@@ -2,7 +2,9 @@
 ---
 
 @use 'abstracts/variables' with (
-  $theme: '{{ site.theme_mode }}'
+  $theme: '{{ site.theme_mode }}',
+  $sidebar-width: 195px,
+  $sidebar-width-large: 225px
 );
 
 /* prettier-ignore */
@@ -14,4 +16,5 @@
 
 /* append your custom style below */
 
+@use 'custom/scale';
 @use 'custom/portfolio';
