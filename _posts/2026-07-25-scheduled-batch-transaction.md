@@ -10,31 +10,30 @@ tags: [spring, transaction, scheduled, batch, multi-tenant, postgresql]
 현재 배치 실행 경로는 `@Scheduled`로 실행되는 스케줄러 경로와, HTTP로 직접 호출하는 수동 실행 경로로 분리되어 있다.
 
 - 스케줄 실행: `BatchScheduler`
-- 수동 실행: `BatchController` (`/api/batch/...`)
+- 수동 실행: `BatchController`
 
-수동 HTTP 경로에서는 요청 헤더의 `X-Tenant-ID`를 기준으로 tenant context가 설정된다.
-HTTP 요청이 들어오면 `TenantInterceptor`가 `X-Tenant-ID` 값을 읽어 `TenantContextHolder`에 저장하고, 이후 Orchestrator의 `@Transactional` 메서드에 진입할 때 `TenantSchemaAspect`가 해당 값을 기준으로 `search_path`를 적용한다.
+수동 HTTP 경로에서는 요청에 담긴 tenant 정보를 기준으로 tenant context가 설정된다.
+HTTP 요청이 들어오면 `TenantInterceptor`가 요청에서 tenant를 식별해 `TenantContextHolder`에 저장하고, 이후 Orchestrator의 `@Transactional` 메서드에 진입할 때 `TenantSchemaAspect`가 해당 값을 기준으로 `search_path`를 적용한다.
 
 ```text
 수동 HTTP 요청
-├─ X-Tenant-ID 헤더 전달
-├─ TenantInterceptor 실행
+├─ TenantInterceptor가 요청에서 tenant 식별
 ├─ TenantContextHolder에 tenant schema 저장
 ├─ Orchestrator @Transactional 진입
 ├─ TenantSchemaAspect가 search_path 적용
 └─ Feature / Mapper 작업 실행
 ```
 
-따라서 헤더가 있는 수동 실행 경로는 tenant context가 정상적으로 잡힌다.
+따라서 HTTP 요청으로 들어오는 수동 실행 경로는 tenant context가 정상적으로 잡힌다.
 
 하지만 `BatchScheduler`는 HTTP 요청으로 실행되지 않는다.
-`@Scheduled`는 별도의 스케줄러 스레드에서 직접 실행되기 때문에 `TenantInterceptor`가 실행되지 않고, 요청 헤더도 존재하지 않는다.
+`@Scheduled`는 별도의 스케줄러 스레드에서 직접 실행되기 때문에 `TenantInterceptor`가 실행되지 않고, tenant를 식별할 요청 정보도 존재하지 않는다.
 
 ```text
 스케줄러 실행
 ├─ @Scheduled 진입
 ├─ HTTP 요청 아님
-├─ X-Tenant-ID 없음
+├─ tenant 정보 없음
 ├─ TenantInterceptor 실행 안 됨
 └─ TenantContextHolder = null
 ```
@@ -96,19 +95,8 @@ private void runScheduled(String jobName, long lockKey, Runnable job) {
 ```java
 @Transactional(readOnly = true)
 public List<String> findTenantSchemas() {
-    List<String> schemas = batchMapper.findTenantSchemas();
-    if (schemas == null || schemas.isEmpty()) {
-        log.warn("tenant schema 목록이 비어 있습니다.");
-        return List.of();
-    }
-    return schemas.stream()
-            .filter(s -> s != null && !s.isBlank())
-            .map(s -> s.trim().toLowerCase(Locale.ROOT))
-            .filter(s -> s.endsWith(TENANT_SCHEMA_SUFFIX))
-            .map(s -> s.substring(0, s.length() - TENANT_SCHEMA_SUFFIX.length()))
-            .filter(s -> !s.isBlank())
-            .distinct()
-            .toList();
+    // 예시: 활성화된 tenant의 schema 이름 목록 조회
+    return tenantMapper.findActiveTenantSchemas();
 }
 ```
 
@@ -140,13 +128,12 @@ private void runForAllTenants(String jobName, Runnable job) {
         return;
     }
 
-    log.info("{} 배치: tenant schema {}건 처리 시작 {}", jobName, schemas.size(), schemas);
     for (String schema : schemas) {
         TenantContextHolder.setSchema(schema);
         try {
             job.run();
         } catch (Exception e) {
-            log.error("{} 배치 schema={} 실패 — 다음 schema 계속", jobName, schema, e);
+            log.error("{} 배치 실패 — 다음 tenant 계속", jobName, e);
         } finally {
             TenantContextHolder.clear();
         }
@@ -198,34 +185,33 @@ tenant schema
 
 ## 처리 흐름
 
-스케줄러 실행 흐름은 다음과 같이 정리할 수 있다.
+일일 집계 배치를 예로 들면, 스케줄러 실행은 세 단계로 나뉜다.
 
 ```text
-스케줄 실행
-├─ BatchScheduler.runDailyAggregation()
-├─ runScheduled("일일 집계", lockKey, batchFacade::dailyAggregation)
-├─ AdvisoryLockExecutor.executeWithLock(...)
-├─ runForAllTenants(...)
-│  ├─ loadTenantSchemas()
-│  │  ├─ TenantContextHolder.setSchema(public)
-│  │  ├─ TenantSchemaCatalog.findTenantSchemas() (@Transactional readOnly)
-│  │  └─ finally TenantContextHolder.clear()
-│  ├─ tenant별 반복
-│  │  ├─ TenantContextHolder.setSchema(schema)
-│  │  ├─ BatchFacade.dailyAggregation()
-│  │  ├─ BatchOrchestrator.dailyAggregation() (@Transactional)
-│  │  │  ├─ TenantSchemaAspect 실행
-│  │  │  ├─ search_path 적용
-│  │  │  └─ Feature 작업 실행
-│  │  ├─ 실패 시 로그 기록 후 다음 schema 계속
-│  │  └─ finally TenantContextHolder.clear()
-│  └─ 모든 schema 처리 완료
-└─ 전체 스케줄 종료
+1. 중복 실행 방지
+   → AdvisoryLockExecutor로 lock 획득
+   → 획득 실패 시 이번 실행은 건너뜀
+
+2. 대상 tenant 조회 (schema = public)
+   → TenantSchemaCatalog.findTenantSchemas()
+   → 조회 후 clear()
+
+3. tenant별 배치 실행 (schema = 각 tenant)
+   → setSchema(tenant)
+   → BatchFacade → BatchOrchestrator (@Transactional)
+   → TenantSchemaAspect가 search_path 적용 후 Feature 실행
+   → 실패해도 로그만 남기고 다음 tenant 진행
+   → finally clear()
 ```
+
+| 단계 | schema context | 트랜잭션 |
+|---|---|---|
+| tenant 목록 조회 | `public` | `@Transactional(readOnly = true)` |
+| tenant별 배치 실행 | 각 tenant schema | Orchestrator의 `@Transactional` |
 
 ## 정리
 
-- 수동 HTTP 실행은 `TenantInterceptor`가 `X-Tenant-ID`를 읽어 tenant context를 설정한다.
+- 수동 HTTP 실행은 `TenantInterceptor`가 요청에서 tenant를 식별해 tenant context를 설정한다.
 - `@Scheduled` 실행은 HTTP 요청이 아니므로 `TenantInterceptor`가 실행되지 않는다.
 - 스케줄러는 `public` schema로 tenant schema 목록을 조회한 뒤, tenant schema를 직접 순회하면서 `TenantContextHolder.setSchema(...)`를 설정해야 한다.
 - Orchestrator의 `@Transactional` 진입 시점에는 schema context가 이미 준비되어 있어야 `TenantSchemaAspect`가 `search_path`를 적용할 수 있다.

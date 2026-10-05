@@ -7,14 +7,14 @@ tags: [spring, transaction, propagation, requires-new]
 
 ## 문제 상황
 
-창고 이동 처리 중 `item_lot`의 사용 여부를 변경하는 부가 로직이 함께 실행되고 있었다.
-기존에는 메인 비즈니스 로직과 같은 트랜잭션에서 실행했기 때문에, 부가 로직에서 데이터베이스 오류가 발생하면 창고 이동 트랜잭션에도 영향을 줄 수 있었다.
+주문 처리 중 `product_stat`의 판매 통계를 갱신하는 부가 로직이 함께 실행되고 있었다.
+기존에는 메인 비즈니스 로직과 같은 트랜잭션에서 실행했기 때문에, 부가 로직에서 데이터베이스 오류가 발생하면 주문 트랜잭션에도 영향을 줄 수 있었다.
 
 ```java
 try {
-    itemLotMapper.updateUseYnByItemAndLot(...);
+    productStatMapper.increaseSalesCount(...);
 } catch (Exception e) {
-    log.warn("item_lot 업데이트 실패");
+    log.warn("판매 통계 갱신 실패");
 }
 ```
 
@@ -27,9 +27,9 @@ try {
 
 ```java
 try {
-    lotUsageSideEffect.markLotUsed(...);
+    salesStatSideEffect.increaseSalesCount(...);
 } catch (Exception e) {
-    log.warn("item_lot 업데이트 실패");
+    log.warn("판매 통계 갱신 실패");
 }
 ```
 
@@ -37,12 +37,12 @@ try {
 
 ```java
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public void markLotUsed(...) {
-    itemLotMapper.updateUseYnByItemAndLot(...);
+public void increaseSalesCount(...) {
+    productStatMapper.increaseSalesCount(...);
 }
 ```
 
-`REQUIRES_NEW`가 적용되면 기존 트랜잭션은 잠시 중단되고, `item_lot` 업데이트를 위한 새로운 트랜잭션이 시작된다.
+`REQUIRES_NEW`가 적용되면 기존 트랜잭션은 잠시 중단되고, 판매 통계 갱신을 위한 새로운 트랜잭션이 시작된다.
 
 - 업데이트 성공: 신규 트랜잭션만 별도로 커밋
 - 업데이트 실패: 신규 트랜잭션만 롤백
@@ -51,12 +51,12 @@ public void markLotUsed(...) {
 ## 처리 흐름
 
 ```text
-창고 이동 트랜잭션
+주문 트랜잭션
 ├─ 메인 비즈니스 로직 실행
-├─ item_lot 신규 트랜잭션 실행
+├─ 판매 통계 신규 트랜잭션 실행
 │  ├─ 성공 → 별도 커밋
 │  └─ 실패 → 해당 트랜잭션만 롤백
-└─ 창고 이동 로직 계속 진행 및 커밋
+└─ 주문 로직 계속 진행 및 커밋
 ```
 
 ## 정리
@@ -66,5 +66,5 @@ public void markLotUsed(...) {
 - 부가 로직의 실패가 핵심 로직에 영향을 주면 안 될 때 활용할 수 있다.
 - 트랜잭션 프록시가 적용되도록 별도의 Spring Bean을 통해 호출해야 한다.
 
-> 신규 트랜잭션이 먼저 커밋된 후 메인 로직이 실패하면, 메인 트랜잭션만 롤백되고 `item_lot` 변경 사항은 유지된다.
+> 신규 트랜잭션이 먼저 커밋된 후 메인 로직이 실패하면, 메인 트랜잭션만 롤백되고 판매 통계 변경 사항은 유지된다.
 {: .prompt-warning }
