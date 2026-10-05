@@ -1,0 +1,11 @@
+---
+layout: null
+permalink: /feed.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 검색 엔진 비공개: 테마 기본 Atom 피드 대신 글 목록이 없는 빈 피드 사용 -->
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>{{ "/" | absolute_url }}</id>
+  <title>{{ site.title }}</title>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+</feed>

@@ -184,6 +184,10 @@ collections:
 
 defaults:
   - scope:
+      path: ""
+    values:
+      sitemap: false # 검색 엔진 비공개: sitemap.xml에서 모든 페이지 제외
+  - scope:
       path: "" # An empty string here means all files in the project
       type: posts
     values:
