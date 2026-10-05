@@ -1,0 +1,68 @@
+{%- comment -%}
+  대표 프로젝트 카드 목록 (_tabs/projects.md)
+{%- endcomment -%}
+{% for project in site.data.portfolio.projects %}
+  <article class="pf-card pf-project"{% if project.id %} id="project-{{ project.id }}"{% endif %}>
+    <div class="pf-item-head">
+      <div>
+        <h3 class="pf-item-title">{{ project.name }}</h3>
+        {% if project.client %}<p class="pf-item-sub">{{ project.client }}</p>{% endif %}
+      </div>
+      {% if project.period %}<span class="pf-period">{{ project.period }}</span>{% endif %}
+    </div>
+
+    {% if project.summary and project.summary != '' %}
+      <div class="pf-work-desc">{{ project.summary | markdownify }}</div>
+    {% endif %}
+    {% include portfolio-badges.html items=project.stack %}
+
+    {% if project.architecture and project.architecture != '' %}
+      <figure class="pf-architecture">
+        <img src="{{ project.architecture | relative_url }}" alt="{{ project.name }} architecture" loading="lazy">
+        <figcaption>Architecture</figcaption>
+      </figure>
+    {% endif %}
+
+    <div class="pf-project-grid">
+      {% if project.decisions.size > 0 %}
+        <div>
+          <h4 class="pf-sub-title">Why this stack</h4>
+          <ul class="pf-list">
+            {% for item in project.decisions %}
+              <li>{{ item | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      {% if project.contributions.size > 0 %}
+        <div>
+          <h4 class="pf-sub-title">Key contributions</h4>
+          <ul class="pf-list">
+            {% for item in project.contributions %}
+              <li>{{ item | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if project.troubleshooting.size > 0 %}
+      <h4 class="pf-sub-title">Problem solving</h4>
+      {% for issue in project.troubleshooting %}
+        <details class="pf-work" {% if forloop.first %}open{% endif %}>
+          <summary><span class="pf-work-title">{{ issue.title }}</span></summary>
+          {% include portfolio-paar.html item=issue %}
+        </details>
+      {% endfor %}
+    {% endif %}
+
+    {% include portfolio-links.html links=project.links %}
+    {% if project.id %}
+      <div class="pf-links">
+        <a class="pf-link pf-link-primary" href="{{ '/projects/' | append: project.id | append: '/' | relative_url }}">
+          <span>상세 보기</span><i class="fas fa-arrow-right fa-fw"></i>
+        </a>
+      </div>
+    {% endif %}
+  </article>
+{% endfor %}

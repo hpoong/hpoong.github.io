@@ -18,12 +18,32 @@ Cursor, Codex, Claude Code가 공통으로 참조하는 프로젝트 지침입�
 
 - `_config.yml`: 사이트 설정 (제목, URL, 언어, 댓글 등)
 - `_posts/`: 블로그 글 (`YYYY-MM-DD-title.md`)
-- `_tabs/`: 사이드바 탭 (about, archives, categories, tags)
+- `_tabs/`: 사이드바 탭 (categories, projects, about)
+  - Archives/Tags 탭은 제거. `/tags/` 페이지는 태그 상세의 breadcrumb용으로 루트 `tags.md`에서 유지
 - `_data/`: 연락처, 공유 설정 등 데이터
-  - `_data/portfolio.yml`: About 탭(포트폴리오) 내용. 레이아웃은 `_layouts/portfolio.html`, 스타일은 `_sass/custom/_portfolio.scss`
+  - `_data/portfolio.yml`: About 탭(경력, 프로젝트 목록)과 Projects 탭(대표 프로젝트 카드) 내용
+- `_layouts/portfolio.html`: About 탭 레이아웃. 스타일은 `_sass/custom/_portfolio.scss`
+- `_includes/portfolio-*.html`: 포트폴리오 공용 조각 (Projects 카드, PAAR, 배지, 링크)
+- `projects/{id}.md`: 대표 프로젝트 상세 페이지 (`/projects/{id}/`)
 - `_plugins/`: Jekyll 플러그인
 - `assets/`: 이미지 등 정적 리소스
 - `tools/`: 로컬 실행/테스트 스크립트
+
+## 포트폴리오 관리
+
+- 대표 프로젝트 추가: `_data/portfolio.yml`의 `projects`에 `id`로 카드를 추가하고, 같은 `id`로 `projects/{id}.md` 상세 페이지를 작성
+- About 경력의 `experience[].projects[].featured`에 `id`를 넣으면 목록에 상세 버튼(새 창)이 붙고, 소개는 `projects`의 `summary`를 사용
+- `_config.yml`, `sitemap.xml`처럼 시작 시 읽는 파일을 바꾸면 로컬 서버 재시작 필요 (`docker restart hpoong-blog`)
+
+## 검색 비공개 설정
+
+검색 엔진·AI 봇에 노출되지 않도록 아래 설정을 유지합니다. 새 페이지를 추가해도 자동 적용됩니다.
+
+- `_includes/metadata-hook.html`: 모든 페이지에 `noindex, nofollow` 메타 태그
+- `assets/robots.txt`: AI 크롤러 차단 (`*`는 noindex를 읽을 수 있도록 허용)
+- `sitemap.xml`: 빈 sitemap으로 jekyll-sitemap 자동 생성을 대체
+- `assets/feed.xml`: 글 목록이 없는 빈 피드로 테마 기본 Atom 피드를 대체 (사이드바 RSS 아이콘도 `_data/contact.yml`에서 제거)
+- 저장소가 공개 상태이므로 실명 등 민감한 정보는 소스에 커밋하지 않습니다.
 
 ## 명령어
 

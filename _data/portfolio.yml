@@ -1,105 +1,161 @@
 # About(포트폴리오) 페이지 데이터. 레이아웃: _layouts/portfolio.html
-# - 대괄호([...]) 값은 자리표시자입니다. 실제 내용으로 교체하세요.
 # - url / image 값이 비어 있으면 해당 링크·이미지는 렌더링되지 않습니다.
 # - 서술형 필드는 Markdown을 지원합니다.
-# - 쓰지 않는 섹션은 목록을 비우거나([]) 키를 삭제하면 숨겨집니다.
+# - 섹션을 추가하려면 키를 추가하면 됩니다:
+#   metrics, projects, activities, writing, education, certifications
+#   (형식은 _layouts/portfolio.html 참고)
+# - experience[].projects[].icon: Font Awesome 클래스 (예: fas fa-server)
+# - experience[].projects[].featured: projects[].id 값. 지정하면 Experience 목록에서 /projects/{id}/ 상세 페이지로 이동
 
 profile:
-  name: "[이름]"
-  role: "[Backend Engineer]"
-  # 상단 3줄 요약: 연차·직무 / 주력 스택 / 대표 정량 성과
+  intro: "끝까지 책임지는 백엔드 개발자"
+  name: "ㅁㅁㅁ"
+  role: "Backend Engineer · Team Lead"
   summary:
-    - "[N년차 백엔드 개발자, 담당 도메인]"
-    - "[주력 스택]"
-    - "[가장 자신 있는 정량 성과]"
-  resume: "" # 예: /assets/files/resume.pdf
+    - "제조 · 에너지 · IoT · 모빌리티 등 다양한 도메인의 서비스와 플랫폼을 설계부터 운영까지 맡아 왔습니다"
+    - "고객사마다 다른 요구를 공통 구조로 풀어내, 변경과 확장에 강한 시스템을 만드는 것을 지향합니다"
+    - "인프라 운영으로 커리어를 시작해, 개발과 운영을 함께 이해하는 시야를 갖추고 있습니다"
+  resume: ""
   links:
-    - { label: Email, icon: fas fa-envelope, url: "" } # mailto:...
-    - { label: GitHub, icon: fab fa-github, url: "" }
-    - { label: Blog, icon: fas fa-pen-nib, url: "" }
-    - { label: LinkedIn, icon: fab fa-linkedin, url: "" }
+    - { label: Email, icon: fas fa-envelope, url: "" }
+    - { label: GitHub, icon: fab fa-github, url: "https://github.com/hpoong" }
+    - { label: Blog, icon: fas fa-pen-nib, url: "/" }
 
-# 핵심 성과 지표 (3~4개 권장)
-metrics:
-  - { value: "[수치]", label: "[지표 설명]" }
-  - { value: "[수치]", label: "[지표 설명]" }
-  - { value: "[수치]", label: "[지표 설명]" }
-
-# 기술 스택: 나열보다 "어디까지 다뤄봤는지"를 note에 문장으로
-skills:
-  - category: Language
-    items: ["[기술]"]
-    note: "[숙련도/활용 범위]"
-  - category: Framework
-    items: ["[기술]"]
-    note: "[숙련도/활용 범위]"
-  - category: Database
-    items: ["[기술]"]
-    note: "[숙련도/활용 범위]"
-  - category: Infra & DevOps
-    items: ["[기술]"]
-    note: "[숙련도/활용 범위]"
-  - category: Messaging & Cache
-    items: ["[기술]"]
-    note: "[숙련도/활용 범위]"
-  - category: Monitoring
-    items: ["[기술]"]
-    note: "[숙련도/활용 범위]"
-
-# 경력: 회사별 → 프로젝트별 PAAR(문제 → 검토 → 실행 → 결과)
 experience:
-  - company: "[회사명]"
-    team: "[팀명]"
-    role: "[직무/직급]"
-    period: "[YYYY.MM - 현재]"
-    summary: "[회사/서비스 한 줄 소개 및 담당 역할]"
-    stack: ["[기술]"]
+  - company: "㈜캐롯아이"
+    team: "기업부설연구소"
+    role: "팀장 · 백엔드/서버 개발"
+    period: "2020.04 - 현재"
+    highlights:
+      - "**팀 운영**: 프로젝트 일정 수립, 공수 산정, 업무 분배"
+      - "**설계**: 서비스 아키텍처 및 DB 설계, 멀티테넌트 구조 전환"
+      - "**개발**: Java/Spring API, 대용량 배치, Redis · Meilisearch 검색"
+      - "**인프라**: Jenkins · Docker · Kubernetes 기반 CI/CD 및 배포 자동화"
     projects:
-      - title: "[프로젝트/과제명]"
-        period: "[YYYY.MM - YYYY.MM]"
-        stack: ["[기술]"]
-        problem: "[왜 이 문제가 중요했는가]"
-        analyze: "[검토한 대안과 선택 이유]"
-        action: "[실제로 실행한 것]"
-        result: "[수치로 표현한 결과]"
+      - title: "MES 플랫폼 리팩토링"
+        icon: "fas fa-industry"
+        domain: ["제조", "멀티테넌트", "시스템 연동"]
+        description: |-
+          하나의 플랫폼에서 여러 제조 고객사를 운영할 수 있도록 DB와 비즈니스 로직을 분리한 멀티테넌트 구조의 MES 플랫폼.
 
-# 프로젝트: 아키텍처, 기술 선택 이유, 트러블슈팅 중심
+          공통 기능과 고객사별 커스텀 로직을 독립적으로 확장할 수 있으며, ERP·설비 등 다양한 외부 시스템과의 연동을 고려한 확장형 구조로 설계.
+
+      - title: "오일타임"
+        icon: "fas fa-car"
+        domain: ["모빌리티", "커머스", "B2B"]
+        featured: oiltime
+
+      - title: "전력 사용량 및 요금 분석 시스템"
+        icon: "fas fa-chart-line"
+        domain: ["에너지", "데이터 분석"]
+        description: |-
+          전력 사용 데이터를 수집하고 요금 및 사용량을 분석해 사용자에게 제공하는 에너지 관리 시스템.
+
+          기간별 사용량과 요금 데이터를 가공하고 다양한 기준의 분석 정보를 제공할 수 있도록 데이터 처리 구조 구성.
+
+      - title: "전기차 충전 인프라 통합 모니터링"
+        icon: "fas fa-charging-station"
+        domain: ["에너지", "모니터링"]
+        description: |-
+          다수의 전기차 충전기 상태와 운영 정보를 하나의 화면에서 관리할 수 있는 통합 모니터링 플랫폼.
+
+          충전기 상태, 장애 정보, 운영 데이터를 수집·처리하여 실시간 현황 확인과 운영 관리가 가능한 구조로 구성.
+
+      - title: "기기 데이터 통합 서비스"
+        icon: "fas fa-microchip"
+        domain: ["IoT", "데이터 모델링"]
+        description: |-
+          다양한 기기에서 발생하는 데이터를 표준 데이터 모델 기반으로 관리하는 IoT 서비스 플랫폼.
+
+          기기별 데이터 구조를 공통 모델로 추상화하고, 이를 기반으로 신규 서비스와 콘텐츠를 확장할 수 있는 구조로 설계.
+
+      - title: "배전반 전력 모니터링 및 분석 시스템"
+        icon: "fas fa-bolt"
+        domain: ["에너지", "모니터링", "시각화"]
+        description: |-
+          설비 및 계전 데이터를 통합 모니터링하고 운영할 수 있도록 고도화한 대시보드 플랫폼.
+
+          즐겨찾기·통합 검색, 트렌드·히트맵 시각화, 설비 모니터링 화면을 확장하고 장비 주기 동기화 및 변경 감지·알림 기능을 구현해 운영 편의성과 설정 변경 추적 기능을 강화한 프로젝트.
+
+      - title: "봉사수첩"
+        icon: "fas fa-hand-holding-heart"
+        domain: ["공공", "봉사활동"]
+        description: |-
+          봉사활동 정보와 참여 이력을 관리하고 사용자에게 봉사 관련 정보를 제공하는 서비스 플랫폼.
+
+          봉사활동 조회·신청·이력 관리 등 주요 기능을 중심으로 서비스 데이터와 사용자 정보를 관리하는 구조로 개발.
+
+      - title: "통합 연계 및 서비스 고도화"
+        icon: "fas fa-right-left"
+        domain: ["에너지", "대시보드", "데이터 분석"]
+        featured: integration
+
+      - title: "F-MES"
+        icon: "fas fa-gears"
+        domain: ["제조", "자재·재고", "CI/CD"]
+        featured: f-mes
+
+      - title: "제조업 Cloud SaaS 플랫폼"
+        icon: "fas fa-cloud"
+        domain: ["제조", "SaaS", "멀티테넌트"]
+        featured: cloud-saas
+
+      - title: "SK Planet 개인정보 관리 시스템"
+        icon: "fas fa-user-shield"
+        domain: ["개인정보", "데이터 연계"]
+        description: |-
+          서비스 내 개인정보를 체계적으로 관리하고 내부 시스템과 연계하기 위한 개인정보 관리 플랫폼.
+
+          개인정보 데이터의 조회·관리·연계 흐름을 정리하고 안정적인 데이터 처리를 위한 백엔드 기능 중심으로 개발.
+
+  - company: "㈜로이츠"
+    team: "인프라팀"
+    role: "사원 · 시스템 유지보수"
+    period: "2018.03 - 2019.04"
+    summary: >-
+      IDC 환경의 Unix/Linux 시스템을 운영하며 장애 원인을 파악해 관련 업체와 신속히 해결하고,
+      계정·권한 정책 관리와 백업/복원, 모니터링을 통해 안정적이고 보안이 강화된 서버 환경을 유지했습니다.
+    highlights:
+      - "Unix/Linux 기반 시스템 운영 지원 (IDC)"
+      - "SK Broadband 그룹웨어 및 이메일 서버 관리와 백업"
+      - "서버 모니터링을 통한 성능 문제 조기 발견 및 대응"
+      - "계정·권한 정책 수립 및 보안 점검, 규정 준수 관리"
+      - "시스템 업그레이드 및 패치 관리"
+
+# 대표 프로젝트. 상세 내용은 projects/{id}.md 페이지에 작성
 projects:
-  - name: "[프로젝트명]"
-    period: "[YYYY.MM - YYYY.MM]"
-    team: "[인원 구성 / 본인 역할]"
-    summary: "[프로젝트 한 줄 소개]"
-    stack: ["[기술]"]
-    architecture: "" # 예: /assets/img/portfolio/project-architecture.png
-    decisions: # 기술 선택 이유
-      - "[기술 선택과 그 이유]"
-    contributions: # 핵심 기여
-      - "[담당 기능/기여 내용]"
-    troubleshooting:
-      - title: "[트러블슈팅 제목]"
-        problem: "[문제 상황]"
-        analyze: "[원인 분석 및 대안 검토]"
-        action: "[해결 방법]"
-        result: "[개선 결과]"
-    links:
-      - { label: GitHub, icon: fab fa-github, url: "" }
-      - { label: Demo, icon: fas fa-arrow-up-right-from-square, url: "" }
-      - { label: 회고, icon: fas fa-pen-nib, url: "" }
+  - id: oiltime
+    name: "오일타임"
+    client: "Total L&C"
+    summary: |-
+      자동차 정비 예약과 차량 관련 상품 구매를 하나로 통합해 제공하는 모빌리티 커머스 플랫폼.
 
-# 오픈소스 기여, 발표, 스터디, 멘토링 등
-activities:
-  - type: "[Open Source]"
-    title: "[활동명]"
-    period: "[YYYY.MM]"
-    description: "[내용]"
-    url: ""
+      위치 기반 카센터 검색부터 예약·결제까지의 사용자 서비스와, 정비업체(카센터)를 위한 제품 구매·고객 예약 관리 B2B 서비스를 함께 구축·운영한 프로젝트.
+    stack: ["Spring Boot", "MySQL", "Redis", "Meilisearch", "AWS", "Docker", "Jenkins"]
 
-# 대표 기술 글
-writing:
-  - { title: "[글 제목]", date: "[YYYY.MM.DD]", url: "" }
+  - id: cloud-saas
+    name: "제조업 Cloud SaaS 플랫폼"
+    client: "대상주식회사"
+    summary: |-
+      글로벌 제조 고객사를 하나의 환경에서 운영할 수 있도록 구축한 NCP Cloud SaaS 기반 제조 플랫폼.
 
-education:
-  - { school: "[학교/교육기관]", major: "[전공/과정]", period: "[YYYY.MM - YYYY.MM]" }
+      공통 모듈 Angular 기반 MES 화면을 React 환경에 통합하고 고객사별 Schema 및 서비스 영역을 분리한 멀티테넌트 구조와 공통 모듈 배포 체계를 적용해 확장성과 운영 효율성을 높인 프로젝트.
+    stack: ["Spring Boot", "PostgreSQL", "Angular", "Kubernetes", "NCP NKS", "Jenkins", "JFrog"]
 
-certifications:
-  - { name: "[자격증/수상명]", issuer: "[발급기관]", date: "[YYYY.MM]" }
+  - id: f-mes
+    name: "F-MES"
+    client: "㈜캐롯아이"
+    summary: |-
+      제조 현장의 자재 흐름과 구매·재고 업무를 통합 관리할 수 있도록 구축한 MES 기반 업무 시스템.
+
+      입고·LOT 관리, 발주, 거래처, BOM, 기타 입출고 기능을 개발하고 CI/CD 파이프라인을 구축해 자재 관리 프로세스와 배포 운영 효율성을 함께 개선한 프로젝트.
+    stack: ["Spring Boot", "Next.js", "AWS EC2", "Docker", "Jenkins", "Grafana", "Loki"]
+
+  - id: integration
+    name: "통합 연계 및 서비스 고도화"
+    client: "LS ELECTRIC"
+    summary: |-
+      설비 데이터를 실시간으로 모니터링하고 분석할 수 있도록 구축한 통합 대시보드 플랫폼.
+
+      임계치 기반 알림, 데이터 연산 및 시각화, 카드 간 상호작용 기능을 고도화하고 Angular 10 → 17 업그레이드와 JupyterLab·InfluxDB 분석 환경 표준화를 통해 서비스 안정성과 개발·분석 환경을 함께 개선한 프로젝트.
+    stack: ["Spring Boot", "Angular 17", "Nx", "MariaDB", "InfluxDB", "JupyterLab", "JFrog"]
