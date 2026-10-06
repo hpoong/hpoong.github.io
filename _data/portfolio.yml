@@ -126,7 +126,6 @@ experience:
 projects:
   - id: oiltime
     name: "오일타임"
-    client: "Total L&C"
     summary: |-
       자동차 정비 예약과 차량 관련 상품 구매를 하나로 통합해 제공하는 모빌리티 커머스 플랫폼.
 
@@ -135,7 +134,6 @@ projects:
 
   - id: cloud-saas
     name: "제조업 Cloud SaaS 플랫폼"
-    client: "대상주식회사"
     summary: |-
       글로벌 제조 고객사를 하나의 환경에서 운영할 수 있도록 구축한 NCP Cloud SaaS 기반 제조 플랫폼.
 
@@ -144,7 +142,6 @@ projects:
 
   - id: f-mes
     name: "F-MES"
-    client: "㈜캐롯아이"
     summary: |-
       제조 현장의 자재 흐름과 구매·재고 업무를 통합 관리할 수 있도록 구축한 MES 기반 업무 시스템.
 
@@ -153,9 +150,8 @@ projects:
 
   - id: integration
     name: "통합 연계 및 서비스 고도화"
-    client: "LS ELECTRIC"
     summary: |-
-      설비 데이터를 실시간으로 모니터링하고 분석할 수 있도록 구축한 통합 대시보드 플랫폼.
+      에너지 설비 데이터를 실시간으로 모니터링하고 분석할 수 있도록 구축한 통합 대시보드 플랫폼.
 
       임계치 기반 알림, 데이터 연산 및 시각화, 카드 간 상호작용 기능을 고도화하고 Angular 10 → 17 업그레이드와 JupyterLab·InfluxDB 분석 환경 표준화를 통해 서비스 안정성과 개발·분석 환경을 함께 개선한 프로젝트.
     stack: ["Spring Boot", "Angular 17", "Nx", "MariaDB", "InfluxDB", "JupyterLab", "JFrog"]

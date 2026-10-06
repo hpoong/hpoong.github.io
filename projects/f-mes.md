@@ -4,9 +4,6 @@ title: F-MES
 permalink: /projects/f-mes/
 ---
 
-> **수행** ㈜캐롯아이
-{: .prompt-info }
-
 ## Tech Stack
 
 - **Frontend**: Next.js

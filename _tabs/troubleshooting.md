@@ -3,7 +3,7 @@
 layout: page
 title: 장애 대응 사례
 icon: fas fa-screwdriver-wrench
-order: 4
+order: 5
 ---
 
 <nav class="ts-index" aria-label="사례 목록">

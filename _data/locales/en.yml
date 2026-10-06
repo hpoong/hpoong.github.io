@@ -1,6 +1,8 @@
 # 테마 locale(en.yml)에 deep merge 됩니다. 필요한 키만 덮어씁니다.
 tabs:
   # 사이드바·상단바 메뉴명 (URL 키 기준)
+  improvements: Improvements
   troubleshooting: Troubleshooting
   # 페이지 h1·브라우저 탭 제목 (title 소문자 키 기준)
+  기술 개선 및 성과: 기술 개선 및 성과
   장애 대응 사례: 장애 대응 사례

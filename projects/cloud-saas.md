@@ -4,9 +4,6 @@ title: 제조업 Cloud SaaS 플랫폼
 permalink: /projects/cloud-saas/
 ---
 
-> **고객사** 대상주식회사 · **수행** ㈜캐롯아이
-{: .prompt-info }
-
 ## Tech Stack
 
 - **Frontend**: Next.js, Angular, Web Components

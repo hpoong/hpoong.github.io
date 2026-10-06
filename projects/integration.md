@@ -4,9 +4,6 @@ title: 통합 연계 및 서비스 고도화
 permalink: /projects/integration/
 ---
 
-> **고객사** LS ELECTRIC · **수행** ㈜캐롯아이
-{: .prompt-info }
-
 ## Tech Stack
 
 - **Frontend**: Angular 17, TypeScript, RxJS
@@ -21,7 +18,7 @@ permalink: /projects/integration/
 
 ## 소개
 
-설비 데이터를 실시간으로 모니터링하고 분석할 수 있도록 구축한 통합 대시보드 플랫폼.
+에너지 설비 데이터를 실시간으로 모니터링하고 분석할 수 있도록 구축한 통합 대시보드 플랫폼.
 
 임계치 기반 알림, 데이터 연산 및 시각화, 카드 간 상호작용 기능을 고도화하고 Angular 10 → 17 업그레이드와 JupyterLab·InfluxDB 분석 환경 표준화를 통해 서비스 안정성과 개발·분석 환경을 함께 개선한 프로젝트.
 

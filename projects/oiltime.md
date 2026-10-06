@@ -4,9 +4,6 @@ title: 오일타임
 permalink: /projects/oiltime/
 ---
 
-> **고객사** Total L&C · **수행** ㈜캐롯아이
-{: .prompt-info }
-
 ## Tech Stack
 
 - **Frontend**: Next.js
