@@ -18,7 +18,7 @@ Cursor, Codex, Claude Code가 공통으로 참조하는 프로젝트 지침입�
 
 - `_config.yml`: 사이트 설정 (제목, URL, 언어, 댓글 등)
 - `_posts/`: 블로그 글 (`YYYY-MM-DD-title.md`)
-- `_tabs/`: 사이드바 탭 (categories, projects, about)
+- `_tabs/`: 사이드바 탭 (categories, projects, troubleshooting, about)
   - Archives/Tags 탭은 제거. `/tags/` 페이지는 태그 상세의 breadcrumb용으로 루트 `tags.md`에서 유지
 - `_data/`: 연락처, 공유 설정 등 데이터
   - `_data/portfolio.yml`: About 탭(경력, 프로젝트 목록)과 Projects 탭(대표 프로젝트 카드) 내용
