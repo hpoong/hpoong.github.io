@@ -13,7 +13,7 @@ order: 4
   </a>
   <a class="ts-index-item" href="#notification-partitioning">
     <span class="ts-index-no">02</span>
-    <span class="ts-index-title">알림 이력 파티셔닝.</span>
+    <span class="ts-index-title">알림 이력 파티셔닝</span>
   </a>
   <a class="ts-index-item" href="#single-datasource">
     <span class="ts-index-no">03</span>
@@ -32,7 +32,7 @@ order: 4
 
 <div class="ts-shots ts-shots-wide" markdown="1">
 
-![공통 로직 모듈화](/assets/img/troubleshooting/docker-log-1.png){: w="1600" h="815" }
+![공통 로직 모듈화: 배경부터 측정 결과까지](/assets/img/improvements/common-library.png){: w="1600" h="842" }
 
 </div>
 
@@ -40,7 +40,7 @@ order: 4
 
 ### 배경
 
-- 6개 마이크로서비스에 검증, 예외/에러코드, 인증 헬퍼, DTO 변환 등 공통 비즈니스 로직이 각각 복사되어 존재.
+- 3개 마이크로서비스에 검증, 예외/에러코드, 인증 헬퍼, DTO 변환 등 공통 비즈니스 로직이 각각 복사되어 존재.
 - 동일 로직 수정 시마다 서비스별 PR·리뷰·배포가 반복되어 반영 범위가 넓고 버전 불일치 리스크 상존.
 
 </div>
@@ -100,7 +100,7 @@ order: 4
 <header class="ts-case-head">
   <span class="ts-case-no">02</span>
   <div>
-    <h2 class="ts-case-title">알림 이력 파티셔닝.</h2>
+    <h2 class="ts-case-title">알림 이력 파티셔닝</h2>
   </div>
 </header>
 
@@ -115,7 +115,7 @@ order: 4
 ### 배경
 
 - 알림 발송 대상 이력(`notification_send_target`)이 일자별로 쌓이며, 보관 상한이 없으면 조회 범위·용량이 누적에 비례해 커짐.
-- 파티션 생성·삭제를 수동으로 하면 누락 위험이 있고, 이후 사용자·발송량이 늘어도 전표 스캔 구조면 성능이 같이 악화될 수 있음.
+- 파티션 생성·삭제를 수동으로 하면 누락 위험이 있고, 이후 사용자·발송량이 늘어도 전체 스캔 구조면 성능이 같이 악화될 수 있음.
 
 </div>
 
@@ -125,7 +125,7 @@ order: 4
 
 - MySQL 월 단위 RANGE 파티셔닝(`sent_at`)으로 조회 범위를 월 단위로 제한.
 - Jenkins Pipeline으로 매월 익월 파티션 자동 생성 및 6개월 초과 파티션 자동 삭제로 보관 주기·용량 고정.
-- 전표 스캔 부담을 줄여 데이터 증가와 무관하게 조회 성능이 유지되는 운영 구조 확보.
+- 전체 스캔 부담을 줄여 데이터 증가와 무관하게 조회 성능이 유지되는 운영 구조 확보.
 
 </div>
 
@@ -181,7 +181,7 @@ order: 4
 
 <div class="ts-shots ts-shots-wide" markdown="1">
 
-![멀티테넌시 DataSource 단일화](/assets/img/troubleshooting/docker-log-1.png){: w="1600" h="815" }
+![멀티테넌시 DataSource 단일화: 배경부터 측정 결과까지](/assets/img/improvements/single-datasource.png){: w="1600" h="872" }
 
 </div>
 
@@ -244,6 +244,12 @@ order: 4
 </div>
 
 - **조건:** 테넌트 100 / pool size 10 / Locust 100 users / 15분
+
+<div class="ts-shots ts-shots-wide" markdown="1">
+
+![Grafana 관측: pool 수, idle 커넥션, PostgreSQL 세션, 요청량, 커넥션 대기](/assets/img/improvements/single-datasource-grafana.png){: w="1213" h="459" }
+
+</div>
 
 </div>
 
