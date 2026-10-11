@@ -6,17 +6,14 @@ permalink: /projects/oiltime/
 
 ## Tech Stack
 
+- **Backend**: Spring Boot, Spring Boot ApplicationRunner (Batch), Maven
 - **Frontend**: Next.js
-- **Backend**: Spring Boot
-- **Database**: MySQL, Redis
-- **Search**: Meilisearch
-- **Batch**: Spring Boot ApplicationRunner
-- **Infrastructure**: AWS, Docker, Docker Compose, Nginx
-- **CI/CD**: Jenkins Pipeline, GitLab Container Registry
-- **Package Management**: Maven, GitLab Package Registry
-- **Database Features**: MySQL Partitioning
+- **Database / Search**: MySQL (Partitioning), Redis, Meilisearch
+- **Infra / CI·CD**: AWS, Docker, Docker Compose, Nginx, Jenkins Pipeline, GitLab Container Registry, GitLab Package Registry
 
 ## 소개
+
+- **팀 구성**: 백엔드 1명 / 프론트엔드 2명
 
 자동차 정비 예약과 차량 관련 상품 구매를 하나로 통합해 제공하는 모빌리티 커머스 플랫폼.
 
@@ -35,7 +32,6 @@ permalink: /projects/oiltime/
   - 푸시 알림 기능을 추가하여 주요 서비스 상태 및 안내 정보를 사용자에게 빠르게 전달할 수 있도록 개선
   - 관리자에서 광고성·시스템성 알림톡을 구분하여 발송하고 관리할 수 있도록 운영 기능 추가
 - **지역 및 상품 검색 사용자 경험 개선**
-  - 카카오·네이버 등 외부 API를 활용해 지역 검색 기능을 고도화하고 다양한 검색 결과를 제공
   - 사용자 입력 오류를 고려해 오타가 포함된 검색어도 원하는 상품을 찾을 수 있도록 상품 검색 기능 개선
   - 검색 정확도와 접근성을 높여 사용자가 원하는 카센터 및 상품을 보다 쉽게 찾을 수 있도록 사용자 경험 개선
 - **쇼핑몰 및 관리자 기능 전면 개선**
@@ -46,30 +42,101 @@ permalink: /projects/oiltime/
 
 ## 분산 Batch → 독립 Batch Runner 아키텍처 전환
 
-- `consumer-service`, `partner-service`, `operation-service` 등 여러 서비스에 Redis 인기검색어, Meilisearch 검색 인덱스, 좌표 데이터 처리 등의 배치 로직이 분산되어 있어 **배치 실행 위치와 운영 절차가 서비스별로 달라 관리 복잡도가 증가하는 문제** 발생
-- 서비스별로 배치를 유지하는 방식 대신 배치 실행 책임을 별도 애플리케이션으로 분리하여, **Spring 기반 통합 Batch Runner 구조로 재설계**
-- `ApplicationRunner`와 환경 변수 `MODE`를 활용해 하나의 실행 애플리케이션에서 작업 유형을 동적으로 선택할 수 있도록 구성하고, Redis·Meilisearch·좌표 처리 등 서로 다른 배치 작업을 공통 실행 구조로 통합
-- 개별 서비스의 배포 주기와 배치 실행을 분리하여 특정 배치 작업만 독립적으로 실행할 수 있도록 하고, **배치 로직 변경이 사용자 서비스 배포에 영향을 주지 않도록 실행 책임 분리**
-- Jenkins Parameter 기반으로 운영자가 필요한 작업을 선택하여 실행할 수 있도록 구성해 서버 접속이나 개별 명령 수행 없이 **동일한 절차로 배치를 실행할 수 있는 운영 체계 구축**
-- 결과적으로 서비스별로 분산되어 있던 배치 실행 구조를 중앙화하고, **배치 운영의 일관성·재사용성 및 유지보수성을 개선**
+<div class="ts-block ts-issue" markdown="1">
+
+### 문제
+
+- `consumer-service`, `partner-service`, `operation-service`에 Redis 인기 검색어 집계, Meilisearch 인덱스 생성, 좌표 데이터 처리 등의 배치 로직이 분산
+- 배치 로직만 변경해도 해당 사용자 서비스의 배포가 필요했고, 서비스마다 실행 방식이 달라 작업 실행 및 장애 대응 과정에서 운영 복잡도 증가
+
+</div>
+
+<div class="ts-block ts-fix" markdown="1">
+
+### 해결
+
+- 배치 실행 책임을 사용자 서비스에서 분리하고, Spring Boot 기반의 **독립 Batch Runner로 통합**
+- `ApplicationRunner`와 환경 변수 `MODE`를 활용해 작업 유형별로 배치를 선택적으로 실행할 수 있도록 구성
+- Redis, Meilisearch, 좌표 처리 등 서로 다른 배치 작업을 공통 실행 구조로 통합
+- Jenkins Parameter와 연계하여 서버 접속 없이 필요한 배치를 선택하고 실행하도록 운영 절차 표준화
+
+</div>
+
+<div class="ts-block ts-verify" markdown="1">
+
+### 결과
+
+- 배치만 고칠 때는 `consumer-service` 등 사용자 서비스를 다시 배포하지 않아도 됨
+- Jenkins에서 `MODE`만 골라 실행해서, 서버에 들어가 배치를 직접 돌리지 않음
+- 인기 검색어, 인덱스, 좌표 처리가 한 Runner에 모여 있어 장애 나면 볼 곳이 한곳임
+
+</div>
 
 ## 3개 서비스 공통 비즈니스 로직 모듈화
 
-- `consumer-service`, `partner-service`, `operation-service` 3개 서비스에 동일하거나 유사한 비즈니스 로직이 각각 구현되어 있어 **기능 변경 시 여러 서비스를 반복 수정해야 하고 서비스별 구현 차이가 발생하는 문제** 확인
-- 기존 프로젝트 구조상 전체 서비스를 하나의 Multi Module 프로젝트로 전환하기 어려운 점을 고려하여, 공통 기능을 애플리케이션과 분리된 **외부 Library 형태로 관리하는 방향으로 구조 설계**
-- 재사용 가능한 비즈니스 로직을 Maven 기반 공통 Library로 분리하고 GitLab Package Registry를 통해 배포하여, 개별 서비스에서는 패키지 버전을 명시적으로 관리하도록 구성
-- 공통 기능의 수정과 배포를 중앙에서 관리하면서도 각 서비스가 필요한 시점에 검증된 버전을 선택적으로 적용할 수 있도록 하여 **공통 코드와 서비스 릴리즈 주기의 결합도 최소화**
-- 패키지 배포 및 버전 관리 기준을 정리하여 신규 서비스에서도 동일한 공통 기능을 재사용할 수 있도록 하고 서비스 간 구현 방식의 일관성 확보
-- 결과적으로 **3개 서비스에 분산되어 있던 중복 로직을 공통화하고 코드 일관성, 변경 영향도 관리 및 유지보수 효율성을 개선**
+<div class="ts-block ts-issue" markdown="1">
+
+### 문제
+
+- `consumer-service`, `partner-service`, `operation-service`에 동일하거나 유사한 비즈니스 로직이 중복 구현
+- 공통 기능 변경 시 여러 서비스를 반복 수정해야 했으며, 서비스별 구현 차이로 코드 일관성과 유지보수성 저하
+- 기존 프로젝트 구조상 Multi Module 전환이 어려워 독립적인 공통 모듈 관리 방식 필요
+
+</div>
+
+<div class="ts-block ts-fix" markdown="1">
+
+### 해결
+
+- 중복된 비즈니스 로직을 서비스에서 분리하고, Maven 기반의 **외부 공통 Library로 모듈화**
+- 3개 서비스에서 재사용 가능한 비즈니스 로직을 공통 Library로 분리하여 중복 구현 최소화
+- GitLab Package Registry를 활용해 공통 Library를 패키지로 배포하고 서비스별 의존성 버전 관리 체계 구축
+- 각 서비스가 필요한 시점에 검증된 버전을 선택적으로 적용하도록 구성하여 공통 Library와 서비스 배포 주기 분리
+
+</div>
+
+<div class="ts-block ts-verify" markdown="1">
+
+### 결과
+
+- 공통 로직을 고칠 때 서비스 세 곳을 같이 수정하지 않고 Library만 고침
+- 서비스마다 Library 버전을 따로 올려서, 한 서비스 배포에 나머지를 묶지 않음
+- 같은 기능이 서비스마다 조금씩 달랐던 부분이 Library 한 버전으로 맞춰짐
+
+</div>
 
 ## 대용량 알림 이력 파티셔닝 및 데이터 Lifecycle 자동화
 
-- `notification_send_history`에 알림 발송 데이터가 지속적으로 누적되면서 단일 테이블 크기가 증가하고, **조회 성능 저하와 오래된 데이터의 운영 관리 문제가 함께 발생**
-- 단순 Index 추가만으로 장기적인 데이터 증가 문제를 해결하기 어렵다고 판단하여, 조회 패턴과 데이터 보관 기간을 기준으로 **MySQL 월 단위 Partitioning 전략 적용**
-- 알림 발생 시점을 기준으로 데이터를 월별 Partition으로 분리하여 조회 범위를 제한하고, 오래된 데이터는 대량 `DELETE` 대신 Partition 단위로 제거할 수 있도록 테이블 구조 개선
-- 신규 월이 시작될 때 필요한 Partition을 사전에 생성하고 보관 기간을 초과한 Partition을 정리할 수 있도록 **Jenkins Pipeline 기반 Partition Lifecycle 자동화**
-- 데이터 생성과 보관 정책을 함께 관리하여 Partition 누락이나 불필요한 데이터 장기 보관으로 인한 운영 위험을 줄이고, 반복적인 DBA성 수동 작업 최소화
-- 결과적으로 **지속적으로 증가하는 알림 데이터를 일정한 기준으로 관리할 수 있는 구조를 확보하고 조회 성능 저하 방지와 데이터 운영 자동화를 동시에 개선**
+<div class="ts-block ts-issue" markdown="1">
+
+### 문제
+
+- `notification_send_history` 테이블에 알림 발송 이력이 지속적으로 누적되면서 테이블 및 인덱스 크기가 증가하고, 보관 기간이 지난 데이터를 정리해야 하는 운영 부담 발생
+- 기존 대량 `DELETE` 방식은 삭제 과정에서 DB 부하와 트랜잭션 로그 증가를 유발하며, 데이터가 늘수록 정기 삭제 작업의 부담도 함께 커지는 구조
+
+</div>
+
+<div class="ts-block ts-fix" markdown="1">
+
+### 해결
+
+- 데이터 증가에 대응하고 보관 정책을 효율적으로 관리하기 위해 **MySQL 월 단위 Range Partitioning 및 데이터 Lifecycle 자동화** 구조 적용
+- 알림 발생 시점을 기준으로 월별 Range Partition을 구성하여 데이터 저장 및 관리 단위를 분리
+- 보관 기간이 지난 데이터는 대량 `DELETE` 대신 Partition 단위로 제거하도록 변경하여 데이터 정리 비용 최소화
+- Jenkins Pipeline을 활용해 신규 Partition 사전 생성 및 보관 기간이 만료된 Partition 정리 작업 자동화
+
+</div>
+
+<div class="ts-block ts-verify" markdown="1">
+
+### 결과
+
+- 보관 기간이 지난 달은 행을 `DELETE`하지 않고 해당 월 Partition을 떼어냄
+- 다음 달 Partition 생성과 만료 Partition 삭제를 Jenkins가 실행함
+- 알림 이력이 늘어도 지우는 단위는 월 Partition 하나로 유지됨
+
+</div>
+
 
 ---
 

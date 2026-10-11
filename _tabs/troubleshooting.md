@@ -242,7 +242,7 @@ Docker 기반 EC2 운영 환경에서 조회 기능은 정상 동작했으나, I
 
 ### 현상
 
-B2B SaaS 서비스에서 배치 실행 중 HikariCP connection timeout이 발생하고, 전 테넌트 일반 API가 함께 지연·실패<br>로그·DB 세션 점검 결과 shared connection pool 고갈 확인
+Kubernetes 환경에서 배치 실행 중 HikariCP connection timeout이 발생하고, 전 테넌트 일반 API가 함께 지연·실패<br>로그·DB 세션 점검 결과 shared connection pool 고갈 확인
 
 - 영향 기능: 배치뿐 아니라 동일 pool을 사용하는 전 테넌트 조회·등록 API까지 지연·실패. 테넌트별 pool 구조에서는 한 테넌트에 국한되던 영향이 shared pool 단일화 이후 전 테넌트로 전파
 - 장애 확인 근거: 앱 로그에서 `Connection is not available, request timed out after 10000ms`와 작업 트랜잭션 개설 실패를 확인하고, PostgreSQL 세션 수가 pool size에 도달한 것을 대조하여 커넥션 고갈을 특정
