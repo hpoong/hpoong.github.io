@@ -19,3 +19,7 @@
 @use 'custom/scale';
 @use 'custom/portfolio';
 @use 'custom/troubleshooting';
+
+#sidebar #avatar {
+  display: none;
+}
