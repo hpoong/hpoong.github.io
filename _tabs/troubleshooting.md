@@ -214,9 +214,11 @@ Docker 기반 EC2 운영 환경에서 조회 기능은 정상 동작했으나, I
 | 운영 기준 | 적용 내용 |
 | --- | --- |
 | 보안 패치 관리 | Next.js 및 관련 의존성의 취약점·보안 패치 상태 점검 |
-| 공격 패턴 모니터링 | 외부 스크립트 다운로드, 셸 실행, systemd 등록 및 외부 콜백 관련 로그 관찰 |
+| 공격 패턴 모니터링 | 실제 관측된 공격 로그 패턴에 공개 보안 사례([CVE-2025-29927](https://nvd.nist.gov/vuln/detail/CVE-2025-29927){:target="_blank" rel="noopener"}, [CVE-2025-55182](https://nvd.nist.gov/vuln/detail/CVE-2025-55182){:target="_blank" rel="noopener"}, [OWASP CRS](https://coreruleset.org/){:target="_blank" rel="noopener"})를 참고하고 AI로 패턴을 검토해 27종 탐지 규칙으로 정리. 탐지 결과는 Loki·Grafana 대시보드에서 패턴별로 집계 |
 | 실행 실패 로그 분석 | `Command failed` 등 오류 발생 시 포함된 명령·대상 경로를 함께 확인하여 공격 관련 여부 구분 |
 | 접근·실행 경로 관리 | 장애 대응 과정에서 확인한 불필요한 접근·실행 경로 정비 |
+
+![Next.js 공격 패턴 모니터링 Grafana 대시보드](/assets/img/troubleshooting/nextjs-attack-monitoring.png){: w="1600" h="934" }
 
 </div>
 
