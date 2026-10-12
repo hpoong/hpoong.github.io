@@ -106,7 +106,7 @@ order: 4
 
 <div class="ts-shots ts-shots-wide" markdown="1">
 
-![알림 이력 파티셔닝](/assets/img/troubleshooting/docker-log-1.png){: w="1600" h="815" }
+![알림 이력 파티셔닝: 배경부터 측정 결과까지](/assets/img/improvements/notification-partitioning.png){: w="1600" h="983" }
 
 </div>
 
