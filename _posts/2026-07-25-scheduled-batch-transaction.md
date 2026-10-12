@@ -1,7 +1,7 @@
 ---
 title: "@Scheduled 배치에서 트랜잭션 처리"
 date: 2026-07-25 22:00:00 +0900
-categories: [Spring, Transaction]
+categories: [Spring, 트랜잭션]
 tags: [spring, transaction, scheduled, batch, multi-tenant, postgresql]
 ---
 

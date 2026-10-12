@@ -1,7 +1,7 @@
 ---
 title: REQUIRES_NEW를 활용한 부가 로직 트랜잭션 분리 처리
 date: 2026-07-25 23:00:00 +0900
-categories: [Spring, Transaction]
+categories: [Spring, 트랜잭션]
 tags: [spring, transaction, propagation, requires-new]
 ---
 

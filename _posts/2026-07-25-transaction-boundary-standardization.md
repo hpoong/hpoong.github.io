@@ -1,7 +1,7 @@
 ---
 title: 트랜잭션 경계 표준화
 date: 2026-07-25 20:00:00 +0900
-categories: [Spring, Transaction]
+categories: [Spring, 트랜잭션]
 tags: [spring, transaction, multi-tenant, postgresql, mybatis]
 ---
 
