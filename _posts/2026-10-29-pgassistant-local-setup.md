@@ -1,7 +1,7 @@
 ---
 title: AI로 DB 튜닝하기 (2) - pgAssistant를 에이전트에 연결하기
 date: 2026-10-29 10:00:00 +0900
-categories: [AI, DB 튜닝]
+categories: [AI 활용, DB 성능 최적화]
 tags: [ai-agent, cursor, claude-code, codex, postgresql, pg-stat-statements, pgassistant, docker]
 ---
 

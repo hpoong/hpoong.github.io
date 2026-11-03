@@ -1,7 +1,7 @@
 ---
 title: AI로 DB 튜닝하기 (1) - pg_stat_statements로 튜닝 대상 찾기
 date: 2026-10-29 09:00:00 +0900
-categories: [AI, DB 튜닝]
+categories: [AI 활용, DB 성능 최적화]
 tags: [postgresql, pg-stat-statements, performance, query-tuning]
 ---
 
