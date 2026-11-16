@@ -38,7 +38,7 @@ MES는 MyBatis 매퍼에 SQL을 직접 작성한다. 쿼리를 튜닝하려면 �
 
 ### 1. 기존 DB에 붙이기만 한다
 
-Compose에는 pgAssistant 컨테이너 **하나만** 둔다. PostgreSQL이나 에이전트는 포함하지 않는다. 이미 쓰고 있는 개발 DB에 연결해서 분석만 한다.
+Compose에는 pgAssistant 컨테이너 **하나만** 둔다. PostgreSQL이나 에이전트는 포함하지 않는다. 운영기에 직접 붙이지 않고, 운영기 데이터를 이관한 개발 DB에 연결해서 분석만 한다.
 
 ```yaml
 services:
@@ -143,7 +143,7 @@ MES 소스를 연 에이전트에게 이렇게 지시했다.
 
 ## 정리
 
-- pgAssistant는 **기존 개발 DB에 붙여서 분석만** 한다. Compose에는 pgAssistant 하나만 둔다.
+- pgAssistant는 **운영 데이터를 이관한 개발 DB에 붙여서 분석만** 한다. Compose에는 pgAssistant 하나만 둔다.
 - 포트는 **`127.0.0.1`에만** 열고, 비밀값은 `.env`로 분리해 **없으면 실행되지 않게** 했다.
 - DB 주소는 **컨테이너 기준**으로 쓴다. 로컬 DB는 `host.docker.internal`이다.
 - 실행 통계 분석에는 **`pg_stat_statements`**가 필요하다.
@@ -151,6 +151,8 @@ MES 소스를 연 에이전트에게 이렇게 지시했다.
 
 > API 토큰은 DB 연결 문자열을 받는 API의 열쇠다. 채팅, 저장소, 에이전트 지시문에 직접 넣지 않는다.
 {: .prompt-warning }
+
+이 구성으로 에이전트가 찾은 쿼리 문제는 [AI로 DB 튜닝하기 (3) - 에이전트가 찾은 쿼리 문제 5가지](/posts/query-review-result/)에 정리했다.
 
 ## 참고
 
