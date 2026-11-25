@@ -1,7 +1,7 @@
 ---
 title: AI로 DB 튜닝하기 (3) - 에이전트가 찾은 쿼리 문제 5가지
 date: 2026-10-30 09:00:00 +0900
-categories: [AI, DB 튜닝]
+categories: [AI 활용, DB 성능 최적화]
 tags: [ai-agent, postgresql, mybatis, query-tuning, explain]
 ---
 
