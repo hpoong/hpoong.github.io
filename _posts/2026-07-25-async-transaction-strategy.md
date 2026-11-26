@@ -1,7 +1,7 @@
 ---
-title: "@Async에서 트랜잭션 전략"
+title: "@Async 작업에서 사라지던 테넌트 정보를 워커 스레드로 전달하기"
 date: 2026-07-25 21:00:00 +0900
-categories: [Spring, 트랜잭션]
+categories: [구조 개선, 트랜잭션 정비]
 tags: [spring, transaction, async, multi-tenant, threadlocal]
 ---
 

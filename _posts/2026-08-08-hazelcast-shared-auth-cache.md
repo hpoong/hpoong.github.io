@@ -1,7 +1,7 @@
 ---
-title: Hazelcast로 여러 Pod의 인증 캐시 통일하기
+title: HPA로 늘어난 Pod 간 인증 캐시 불일치 해결하기
 date: 2026-08-08 12:00:00 +0900
-categories: [Spring, 분산 시스템]
+categories: [구조 개선, 인증 캐시 공유]
 tags: [spring, hazelcast, distributed-system, kubernetes, distributed-lock, cache]
 ---
 

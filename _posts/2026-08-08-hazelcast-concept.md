@@ -1,7 +1,7 @@
 ---
-title: Hazelcast 개념 정리
+title: 캐시 서버 없이 Hazelcast를 도입하며 검토한 것들
 date: 2026-08-08 13:00:00 +0900
-categories: [Spring, 분산 시스템]
+categories: [구조 개선, 인증 캐시 공유]
 tags: [spring, hazelcast, distributed-system, kubernetes, cache]
 ---
 

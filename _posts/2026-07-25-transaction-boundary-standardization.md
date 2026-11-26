@@ -1,7 +1,7 @@
 ---
-title: 트랜잭션 경계 표준화
+title: 트랜잭션 경계를 Orchestrator 계층으로 통일하기
 date: 2026-07-25 20:00:00 +0900
-categories: [Spring, 트랜잭션]
+categories: [구조 개선, 트랜잭션 정비]
 tags: [spring, transaction, multi-tenant, postgresql, mybatis]
 ---
 

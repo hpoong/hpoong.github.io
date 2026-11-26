@@ -1,7 +1,7 @@
 ---
-title: REQUIRES_NEW를 활용한 부가 로직 트랜잭션 분리 처리
+title: 판매 통계 갱신 실패가 주문에 영향을 주지 않도록 트랜잭션 분리하기
 date: 2026-07-25 23:00:00 +0900
-categories: [Spring, 트랜잭션]
+categories: [구조 개선, 트랜잭션 정비]
 tags: [spring, transaction, propagation, requires-new]
 ---
 

@@ -1,7 +1,7 @@
 ---
-title: "@Scheduled 배치에서 트랜잭션 처리"
+title: "@Scheduled 배치를 테넌트별 트랜잭션으로 실행하도록 바꾸기"
 date: 2026-07-25 22:00:00 +0900
-categories: [Spring, 트랜잭션]
+categories: [구조 개선, 트랜잭션 정비]
 tags: [spring, transaction, scheduled, batch, multi-tenant, postgresql]
 ---
 
