@@ -5,6 +5,13 @@ categories: [AI 활용, DB 성능 최적화]
 tags: [postgresql, pg-stat-statements, performance, query-tuning]
 ---
 
+MES 개발에서 코드 작성은 이미 AI 에이전트와 함께 하고 있지만, DB 튜닝은 여전히 사람이 직접 하고 있었다.
+이 시리즈는 에이전트가 **DB 상태를 근거로** 튜닝하도록 만든 과정을 정리한다. 안전을 위해 운영 DB에 직접 붙지 않고, 운영 데이터를 개발 DB로 이관해 작업했다.
+
+- (1) 튜닝 근거가 될 실행 통계 켜기 (`pg_stat_statements`) ← 이 글
+- (2) [pgAssistant를 에이전트에 연결하기](/posts/pgassistant-local-setup/)
+- (3) [에이전트가 찾은 쿼리 문제 5가지](/posts/query-review-result/)
+
 ## 왜 필요한가
 
 쿼리 튜닝은 보통 "느리다"는 제보에서 시작한다. 제보가 들어온 화면의 쿼리를 찾아 `EXPLAIN`을 돌리고 고친다.

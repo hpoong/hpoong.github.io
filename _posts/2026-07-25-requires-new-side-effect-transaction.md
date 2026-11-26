@@ -1,9 +1,11 @@
 ---
-title: 판매 통계 갱신 실패가 주문에 영향을 주지 않도록 트랜잭션 분리하기
+title: "트랜잭션 단위로 스키마 설정 (4) - REQUIRES_NEW로 부가 로직 실패가 메인 트랜잭션에 번지지 않게 분리하기"
 date: 2026-07-25 23:00:00 +0900
-categories: [구조 개선, 트랜잭션 정비]
+categories: [구조 개선, 테넌트 분리]
 tags: [spring, transaction, propagation, requires-new]
 ---
+
+[1편](/posts/transaction-boundary-standardization/)의 규칙은 "트랜잭션은 Orchestrator에서만 시작한다"였다. 이 글은 그 규칙의 예외로, 하나의 업무 안에서 트랜잭션을 **일부러 나눠야 하는** 경우다.
 
 ## 문제 상황
 
@@ -65,6 +67,7 @@ public void increaseSalesCount(...) {
 - `REQUIRES_NEW`는 트랜잭션과 롤백 범위를 분리한다.
 - 부가 로직의 실패가 핵심 로직에 영향을 주면 안 될 때 활용할 수 있다.
 - 트랜잭션 프록시가 적용되도록 별도의 Spring Bean을 통해 호출해야 한다.
+- `REQUIRES_NEW`는 새 트랜잭션을 새 커넥션에서 시작한다. `set_config(..., true)`로 건 `search_path`는 이어지지 않으므로, 새 트랜잭션에서도 테넌트 스키마가 다시 적용되는지 확인해야 한다.
 
 > 신규 트랜잭션이 먼저 커밋된 후 메인 로직이 실패하면, 메인 트랜잭션만 롤백되고 판매 통계 변경 사항은 유지된다.
 {: .prompt-warning }

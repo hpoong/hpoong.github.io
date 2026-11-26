@@ -1,14 +1,16 @@
 ---
-title: "@Async 작업에서 사라지던 테넌트 정보를 워커 스레드로 전달하기"
+title: "트랜잭션 단위로 스키마 설정 (2) - @Async 작업에서 사라지던 테넌트 정보를 워커 스레드로 전달하기"
 date: 2026-07-25 21:00:00 +0900
-categories: [구조 개선, 트랜잭션 정비]
+categories: [구조 개선, 테넌트 분리]
 tags: [spring, transaction, async, multi-tenant, threadlocal]
 ---
+
+[1편](/posts/transaction-boundary-standardization/)에서 모든 DB 작업을 Orchestrator 트랜잭션으로 묶었다. 그런데 `@Async` 작업은 요청 스레드 밖에서 실행된다.
 
 ## 문제 상황
 
 현재 멀티테넌트 구조에서는 요청마다 사용하는 스키마 정보가 `TenantContextHolder`의 `ThreadLocal`에 저장된다.
-일반적인 동기 처리에서는 HTTP 요청 스레드 안에서 Controller, Facade, Orchestrator, Feature, Mapper 흐름이 이어지기 때문에 같은 스레드의 `ThreadLocal` 값을 계속 사용할 수 있다.
+일반적인 동기 처리에서는 HTTP 요청 스레드 안에서 Controller, Orchestrator, Feature, Mapper 흐름이 이어지기 때문에 같은 스레드의 `ThreadLocal` 값을 계속 사용할 수 있다.
 
 ```text
 HTTP 스레드
@@ -97,9 +99,9 @@ public class TenantContextTaskDecorator implements TaskDecorator {
 
 ```text
 1. HTTP 스레드에서 tenantId 확인
-2. TaskDecorator가 schema 값 저장
+2. TaskDecorator가 스키마 값 저장
 3. 비동기 스레드 시작
-4. 비동기 스레드에 schema 설정
+4. 비동기 스레드에 스키마 설정
 5. 실제 엑셀 업로드 실행
 6. 작업 종료 후 ThreadLocal 제거
 ```
@@ -108,20 +110,22 @@ public class TenantContextTaskDecorator implements TaskDecorator {
 
 ```text
 1) 웹 스레드 (응답 빨리 반환)
-   Facade.submitApproval
+   Controller.submitApproval
      → jobId 발급
      → Orchestrator.approveAsync       ← TX 없음, "시작만"
        → Feature.approveAsync(@Async)  ← 여기까지는 submit만
    → 클라이언트에 jobId 반환
 
 2) 워커 스레드 (백그라운드)
-   TenantContextTaskDecorator가 schema 복원
+   TenantContextTaskDecorator가 스키마 복원
    Feature.approveAsync 본문 실행
      → job PROCESSING
      → Orchestrator.approve(@Transactional)  ← 여기서 TX + search_path
          → Feature.approve (실제 mapper 작업)
      → job COMPLETED
 ```
+
+`Orchestrator.approveAsync`는 작업을 제출만 하고 DB 작업을 하지 않으므로 트랜잭션을 열지 않는다. 실제 DB 작업은 워커 스레드의 `Orchestrator.approve`에서 트랜잭션으로 묶인다.
 
 워커 스레드 안에서 스키마가 실제 DB에 적용되는 시점은 다음과 같다.
 
@@ -148,3 +152,5 @@ public class TenantContextTaskDecorator implements TaskDecorator {
 - 비동기 스레드에서 올바른 스키마를 사용하려면 `TaskDecorator`로 스키마 컨텍스트를 전달해야 한다.
 - 트랜잭션은 웹 스레드가 아니라 워커 스레드에서 호출하는 Orchestrator의 `@Transactional`에서 시작한다.
 - 작업 종료 후 `TenantContextHolder.clear()`를 호출해 스레드 풀에 이전 스키마가 남지 않도록 해야 한다.
+
+다음 글: [트랜잭션 단위로 스키마 설정 (3) - @Scheduled 배치를 테넌트별 트랜잭션으로 실행하도록 바꾸기](/posts/scheduled-batch-transaction/)

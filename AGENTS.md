@@ -23,6 +23,7 @@ Cursor, Codex, Claude Code가 공통으로 참조하는 프로젝트 지침입�
 - `_data/`: 연락처, 공유 설정 등 데이터
   - `_data/portfolio.yml`: About 탭(경력, 프로젝트 목록)과 Projects 탭(대표 프로젝트 카드) 내용
 - `_layouts/portfolio.html`: About 탭 레이아웃. 스타일은 `_sass/custom/_portfolio.scss`
+- `_layouts/category.html`: 테마 레이아웃을 덮어써서 카테고리 글 목록을 오래된 순으로 표시 (시리즈 (1)편이 위로)
 - `_includes/portfolio-*.html`: 포트폴리오 공용 조각 (Projects 카드, PAAR, 배지, 링크)
 - `projects/{id}.md`: 대표 프로젝트 상세 페이지 (`/projects/{id}/`)
 - `_plugins/`: Jekyll 플러그인

@@ -1,5 +1,5 @@
 ---
-title: HPA로 늘어난 Pod 간 인증 캐시 불일치 해결하기
+title: Pod 간 인증 캐시 통일하기 (1) - HPA로 늘어난 Pod의 캐시 불일치 해결
 date: 2026-08-08 12:00:00 +0900
 categories: [구조 개선, 인증 캐시 공유]
 tags: [spring, hazelcast, distributed-system, kubernetes, distributed-lock, cache]
@@ -73,12 +73,14 @@ Pod별 인증 로그를 나눠 보니, 등록 이후에 뜬 Pod 3만 새 호출�
 HPA를 쓰는 한 Pod는 언제든 다른 시각에 뜬다. 갱신 주기를 줄이는 것만으로는 Pod 간 차이가 사라지지 않는다.
 **모든 Pod가 같은 목록을 보고, 갱신은 한곳에서 하는 구조**가 필요했다.
 
-보통은 Redis 같은 공유 캐시를 쓰지만, 운영 환경에서는 Redis를 쓸 수 없었다.
+보통은 Redis 같은 공유 캐시를 쓰지만, Redis를 띄우려면 추가 비용이 들어 운영 환경에 올릴 수 없었다.
 
 ## 해결 방향: Hazelcast
 
 Hazelcast는 **애플리케이션 안에 라이브러리로 넣어 쓰는 분산 캐시**다.
 별도 캐시 서버 없이, 서버들이 네트워크로 서로를 찾아 하나의 클러스터가 되고 데이터를 공유한다.
+
+Redis 대신 임베디드 Hazelcast를, `IMap` 대신 `ReplicatedMap`을 고른 이유는 [2편](/posts/hazelcast-concept/)에 정리했다.
 
 이번에 쓴 기능은 두 가지다.
 
@@ -220,3 +222,5 @@ DB 변경이 반영되기까지는 여전히 최대 1시간이 걸린다.
 
 > 캐시에는 비밀번호 해시가 들어 있고 서버 간에 복사된다. 무료 버전 Hazelcast는 서버 간 통신을 암호화하지 않으므로, 클러스터 포트(5701)는 같은 서비스의 서버끼리만 통신하도록 막아야 한다.
 {: .prompt-warning }
+
+Hazelcast를 고르며 검토한 개념(클러스터 구성, 자료구조 선택, 분산 락, 직렬화)은 [Pod 간 인증 캐시 통일하기 (2) - 캐시 서버 없이 Hazelcast를 도입하며 검토한 것](/posts/hazelcast-concept/)에 정리했다.
