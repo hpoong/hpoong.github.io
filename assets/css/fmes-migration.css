@@ -1,0 +1,208 @@
+.fmes-case-hero,
+.fmes-case-flow {
+  --fmes-accent: #92f5d5;
+  --fmes-muted: #b8cbd9;
+  --fmes-line: #3d5465;
+  --fmes-panel: #172b3d;
+  margin: 1.5rem 0 2.25rem;
+  padding: clamp(1.1rem, 4%, 2rem);
+  border: 1px solid var(--fmes-line);
+  border-radius: 1rem;
+  background: #102131;
+  color: #f3f8fc;
+  text-align: left;
+}
+
+.fmes-case-hero {
+  background: radial-gradient(ellipse at 100% 0, #214657 0, transparent 65%), #102131;
+}
+
+.fmes-case-hero p,
+.fmes-case-flow p {
+  margin: 0;
+}
+
+.fmes-case-hero .fmes-case-metrics {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  margin: 1.35rem 0 1rem;
+  padding: 1.05rem 0;
+  border-block: 1px solid var(--fmes-line);
+}
+
+.fmes-case-metrics > div + div {
+  padding-inline-start: 0.85rem;
+  border-inline-start: 1px solid var(--fmes-line);
+}
+
+.fmes-case-metrics dt {
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.fmes-case-metrics dd {
+  margin: 0;
+}
+
+.fmes-case-metrics dd:first-of-type {
+  color: var(--fmes-accent);
+  white-space: nowrap;
+}
+
+.fmes-case-metrics strong {
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.fmes-case-metrics dd:last-of-type,
+.fmes-case-state,
+.fmes-case-flow figcaption {
+  color: var(--fmes-muted);
+  font-size: 0.875rem;
+}
+
+.fmes-case-hero .fmes-case-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.85rem;
+}
+
+.fmes-case-state strong {
+  color: var(--fmes-accent);
+}
+
+.content .fmes-case-decisions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.fmes-case-decisions > div {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--main-border-color, #737373);
+  border-block-start: 2px solid #439884;
+  border-radius: 0.55rem;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.fmes-case-decisions dt {
+  font-weight: 700;
+}
+
+.fmes-case-decisions dd {
+  margin: 0.45rem 0 0;
+}
+
+.fmes-case-decisions dd + dd {
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--main-border-color, #737373);
+  font-size: 0.875rem;
+}
+
+.fmes-case-flow .fmes-case-stages,
+.fmes-case-flow .fmes-case-paths {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+}
+
+.fmes-case-flow .fmes-case-stages {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  list-style: none;
+}
+
+.fmes-case-stages li {
+  position: relative;
+}
+
+.fmes-case-stages li + li::before {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: 1.1rem;
+  border-top: 1px solid var(--fmes-accent);
+  content: "";
+}
+
+.fmes-case-flow .fmes-case-stages li,
+.fmes-case-paths > div {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--fmes-line);
+  border-radius: 0.55rem;
+  background: var(--fmes-panel);
+}
+
+.fmes-case-stages strong,
+.fmes-case-paths strong,
+.fmes-case-stages span,
+.fmes-case-paths span {
+  display: block;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.fmes-case-stages span,
+.fmes-case-paths span {
+  margin-top: 0.25rem;
+  color: var(--fmes-muted);
+  font-size: 0.875rem;
+}
+
+.fmes-case-target {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--fmes-accent);
+}
+
+.fmes-case-flow .fmes-case-target-label {
+  margin-bottom: 0.55rem;
+  color: var(--fmes-accent);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.fmes-case-flow .fmes-case-paths {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fmes-case-flow figcaption {
+  width: auto;
+  margin: 0.8rem 0 0;
+  text-align: left;
+  font-style: normal;
+}
+
+@media (max-width: 42rem) {
+  .fmes-case-hero .fmes-case-metrics,
+  .fmes-case-flow .fmes-case-stages,
+  .fmes-case-flow .fmes-case-paths {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fmes-case-stages li + li::before {
+    inset: auto auto 100% 50%;
+    width: 0;
+    height: 1.1rem;
+    border-top: 0;
+    border-left: 1px solid var(--fmes-accent);
+  }
+
+  .fmes-case-metrics > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 0.55rem;
+  }
+
+  .fmes-case-metrics > div + div {
+    margin-top: 0.55rem;
+    padding: 0.55rem 0 0;
+    border-inline-start: 0;
+    border-top: 1px solid var(--fmes-line);
+  }
+}
